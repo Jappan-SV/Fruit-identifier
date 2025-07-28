@@ -68,21 +68,23 @@
       preview.style.display = "block";
     });
 
-    document.getElementById("predictBtn").addEventListener("click", async () => {
+    document.getElementById("predictBtn").addEventListener("click", () => {
       if (!model || preview.style.display === "none") {
         alert("Upload an image first.");
         return;
       }
-      const prediction = await model.predict(preview);
-      console.log("Prediction:", prediction);
-      let best = prediction[0];
-      for (let i = 1; i < prediction.length; i++) {
-        if (prediction[i].probability > best.probability) {
-          best = prediction[i];
+      setTimeout(async () => {
+        const prediction = await model.predict(preview);
+        console.log("Prediction:", prediction);
+        let best = prediction[0];
+        for (let i = 1; i < prediction.length; i++) {
+          if (prediction[i].probability > best.probability) {
+            best = prediction[i];
+          }
         }
-      }
-      document.getElementById("result").textContent = 
-        `Looks like: ${best.className} (${(best.probability * 100).toFixed(1)}%)`;
+        document.getElementById("result").textContent = 
+          `Looks like: ${best.className} (${(best.probability * 100).toFixed(1)}%)`;
+      }, 150); // small delay for mobile rendering
     });
   </script>
 </body>
