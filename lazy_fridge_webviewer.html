@@ -51,30 +51,29 @@
 
   <script type="text/javascript">
     const URL = "https://teachablemachine.withgoogle.com/models/5wt7H12Go/";
-    let model, imageElement;
+    let model;
 
     async function init() {
       model = await tmImage.load(URL + "model.json", URL + "metadata.json");
       console.log("Model loaded");
     }
 
+    init();
+
+    const preview = document.getElementById("preview");
     document.getElementById("upload").addEventListener("change", function (e) {
       const file = e.target.files[0];
       if (!file) return;
-      imageElement = new Image();
-      imageElement.onload = () => {
-        document.getElementById("preview").src = imageElement.src;
-        document.getElementById("preview").style.display = "block";
-      };
-      imageElement.src = window.URL.createObjectURL(file);
+      preview.src = window.URL.createObjectURL(file);
+      preview.style.display = "block";
     });
 
     document.getElementById("predictBtn").addEventListener("click", async () => {
-      if (!model || !imageElement) {
+      if (!model || preview.style.display === "none") {
         alert("Upload an image first.");
         return;
       }
-      const prediction = await model.predict(imageElement);
+      const prediction = await model.predict(preview);
       console.log("Prediction:", prediction);
       let best = prediction[0];
       for (let i = 1; i < prediction.length; i++) {
@@ -85,8 +84,6 @@
       document.getElementById("result").textContent = 
         `Looks like: ${best.className} (${(best.probability * 100).toFixed(1)}%)`;
     });
-
-    init();
   </script>
 </body>
 </html>
