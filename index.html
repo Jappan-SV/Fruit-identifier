@@ -26,13 +26,6 @@
       padding: 10px;
       font-size: 16px;
     }
-    #result {
-      font-size: 22px;
-      margin-top: 30px;
-      font-weight: bold;
-      color: #333;
-      padding: 10px;
-    }
     img {
       max-width: 100%;
       height: auto;
@@ -46,7 +39,6 @@
   <input type="file" id="upload" accept="image/*" />
   <br />
   <button id="predictBtn">Identify</button>
-  <div id="result">Prediction will appear here</div>
   <img id="preview" style="display:none;"/>
 
   <script type="text/javascript">
@@ -83,7 +75,6 @@
           }
         }
         const predictionText = `${best.className} (${(best.probability * 100).toFixed(1)}%)`;
-        document.getElementById("result").textContent = `Looks like: ${predictionText}`;
 
         // Send result back to MIT App Inventor via WebViewString
         if (window.AppInventor) {
