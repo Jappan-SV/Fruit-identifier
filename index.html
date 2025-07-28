@@ -82,8 +82,13 @@
             best = prediction[i];
           }
         }
-        document.getElementById("result").textContent = 
-          `Looks like: ${best.className} (${(best.probability * 100).toFixed(1)}%)`;
+        const predictionText = `${best.className} (${(best.probability * 100).toFixed(1)}%)`;
+        document.getElementById("result").textContent = `Looks like: ${predictionText}`;
+
+        // Send result back to MIT App Inventor via WebViewString
+        if (window.AppInventor) {
+          window.AppInventor.setWebViewString(predictionText);
+        }
       }, 150); // small delay for mobile rendering
     });
   </script>
