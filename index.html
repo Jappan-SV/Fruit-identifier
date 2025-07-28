@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lazy Fridge Advisor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    #result { font-size: 24px; margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Lazy Fridge Advisor</h1>
+  <input type="file" id="upload" accept="image/*" />
+  <div id="result">Prediction will appear here</div>
+
+  <script type="text/javascript">
+    const URL = "https://teachablemachine.withgoogle.com/models/5wt7H12Go/";
+
+    let model, labelContainer;
+
+    async function init() {
+      model = await tmImage.load(URL + "model.json", URL + "metadata.json");
+    }
+
+    document.getElementById("upload").addEventListener("change", async function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const img = new Image();
+      img.onload = async () => {
+        const prediction = await model.predict(img);
+        const best = prediction.reduce((a, b) => (a.probability > b.probability ? a : b));
+        document.getElementById("result").textContent =
+          `Looks like: ${best.className} (${(best.probability * 100).toFixed(1)}%)`;
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    init();
+  </script>
+</body>
+</html>
